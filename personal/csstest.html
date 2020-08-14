@@ -1,0 +1,487 @@
+<!--<html>
+<head>
+  <title>CSS TEST</title>
+</head>
+<script type="text/javascript">
+  let particlesPerAttractor = 12;
+  let numAttractors         = 14;
+  let attractorSpeed        = 1;
+  let particleSpeed         = 8;
+  let iterations            = 120;
+  let arrowPeriod           = 10;
+
+  let lineWidth             = 2;
+
+  class Particle{
+    constructor(parent, x, y){
+      this.p       = parent;
+      this.offset  = v2(x, y);
+      this.reset();
+    }
+    reset(){
+      this.pos  = v2(this.p.pos.x + this.offset.x, this.p.pos.y + this.offset.y);
+      this.prev = this.pos.copy();
+    }
+    update(){
+      let earlyExit = false;
+      let v         = v2(0, 0);
+      
+      //dneg and dpos for color calculations based on closest pos and neg attractors
+      let dpos = 1e6;
+      let dneg = 1e6;
+      for (let t of attractors){
+        let v2 = t.pos.copy().sub(this.pos).mult(t.polarity);
+        let d = v2.mag();
+        if (d < dneg && t.polarity == -1) dneg = d;
+        if (d < dpos && t.polarity ==  1) dpos = d;
+        if (d < particleSpeed && t.polarity ==  1) earlyExit = true;
+        v.add(v2.div(d*d)); //divide by d for distance squared calc
+      }
+      
+      //color
+      // let hue = .3 + (.3*dneg + -.3*dpos)/(dneg + dpos);
+      let hue = .8 - (.2*dneg + -.2*dpos)/(dneg + dpos);
+      stroke(hue, 1, 1);
+      
+      //heading
+      v = v.normalize();
+      this.prev = this.pos.copy();
+      this.pos.add(v.mult(particleSpeed));
+      return earlyExit;
+    }
+    render(){
+      line(this.prev.x, this.prev.y, this.pos.x, this.pos.y);
+    }
+    renderTri(){
+      let a = this.prev.copy().sub(this.pos).heading();
+      pushPop(() => {
+        translate(this.pos.x, this.pos.y);
+        rotate(a);
+        pushPop(() => {rotate( .4); line(0, 0, 6, 0)});
+        pushPop(() => {rotate(-.4); line(0, 0, 6, 0)});
+      });
+    }
+  }
+
+  class Attractor{
+    constructor(idx){
+      this.pos      = r2();
+      this.vel      = p5.Vector.random2D();
+      this.polarity = 1;
+      this.hue      = .6;
+      if (idx%2 == 0){
+        this.polarity = -1;
+        this.hue      =  0;
+        for (let i = 0; i < particlesPerAttractor; i++){
+          let a = i*TAU/particlesPerAttractor;
+          let x = cos(a);
+          let y = sin(a);
+          particles.push(new Particle(this, x, y));
+        }
+      }
+    }
+    update(){
+      this.pos.add(this.vel.copy().mult(attractorSpeed));
+      if (this.pos.x < 0 || this.pos.x > width ) this.vel.x *= -1;
+      if (this.pos.y < 0 || this.pos.y > height) this.vel.y *= -1;
+    }
+    render(){
+      fill(this.hue, 1, 1);
+      noStroke();
+      ellipse(this.pos.x, this.pos.y, particleSpeed*2);
+    }
+  }
+
+  function setup (){
+    pixelDensity(1);
+    createCanvas();
+    colorMode(HSB, 1, 1, 1);
+    windowResized();
+    strokeWeight(lineWidth);
+  }
+
+  let attractors, particles;
+  let init = () => {
+    attractors  = [];
+    particles = [];
+    for (let i = 0; i < numAttractors; i++) attractors.push(new Attractor(i));
+  }
+
+  function draw(){
+    background(.1);
+    attractors.map(a => a.update());
+    particles.map(p => p.reset());
+    particles.map(p => {
+      for (let i = 0; i < iterations; i++){
+        let earlyExit = p.update();
+        if (earlyExit) break;
+        p.render();
+        if (i%arrowPeriod == 0) p.renderTri();
+      }
+    })
+    attractors.map(a => a.render());
+  }
+
+  let v2 = (x, y) => createVector(x, y)
+  let r2 = ()     => createVector(random(width), random(height));
+  let pushPop = f => {push(); f(); pop();} 
+
+  function mousePressed(){init()}
+
+  function windowResized(){
+    resizeCanvas(windowWidth, windowHeight);
+    init();
+  }
+</script>
+<style>
+  /* * { margin:0; padding:0; } 
+  html, body { width:100%; height:100%; overflow: hidden; background:black;} 
+  canvas { display:block; }*/
+  @import url(https://fonts.googleapis.com/css?family=Alegreya+Sans:100,100italic,300,300italic);
+
+  $text : gold;
+  $shadow : olivedrab;
+  $background : bisque;
+
+  @mixin supershadow($offset) {
+    $w : $offset; 
+    $c : $shadow;
+    $d : darken($c, 25%);
+    $e : lighten($c, 25%);
+    $f : darken($c, 50%);
+    $g : darken($c, 50%);
+    $h : lighten($c, 25%);
+    $i : darken($c, 50%);
+
+    text-shadow:
+      $w*1 $w*1 $d,
+      $w*2 $w*2 $d,
+      $w*3 $w*3 $d,
+      $w*4 $w*4 $d,
+      $w*5 $w*5 $d,
+      $w*6 $w*6 $d,
+      $w*7 $w*7 $d,
+      $w*8 $w*8 $d,
+      $w*9 $w*9 $d,
+      $w*10 $w*10 $d,
+      $w*11 $w*11 $d,
+      $w*12 $w*12 $d,
+      $w*13 $w*13 $d,
+      $w*14 $w*14 $d,
+      $w*15 $w*15 $d,
+      -$w*1 $w*1 $c,
+      -$w*2 $w*2 $c,
+      -$w*3 $w*3 $c,
+      -$w*4 $w*4 $c,
+      -$w*5 $w*5 $c,
+      -$w*6 $w*6 $c,
+      -$w*7 $w*7 $c,
+      -$w*8 $w*8 $c,
+      -$w*9 $w*9 $c,
+      -$w*10 $w*10 $c,
+      -$w*11 $w*11 $c,
+      -$w*12 $w*12 $c,
+      -$w*13 $w*13 $c,
+      -$w*14 $w*14 $c,
+      -$w*15 $w*15 $c,
+      -$w*1 (-$w*1) $e,
+      -$w*2 (-$w*2) $e,
+      -$w*3 (-$w*3) $e,
+      -$w*4 (-$w*4) $e,
+      -$w*5 (-$w*5) $e,
+      -$w*6 (-$w*6) $e,
+      -$w*7 (-$w*7) $e,
+      -$w*8 (-$w*8) $e,
+      -$w*9 (-$w*9) $e,
+      -$w*10 (-$w*10) $e,
+      -$w*11 (-$w*11) $e,
+      -$w*12 (-$w*12) $e,
+      -$w*13 (-$w*13) $e,
+      -$w*14 (-$w*14) $e,
+      -$w*15 (-$w*15) $e,
+      $w*1 (-$w*1) $c,
+      $w*2 (-$w*2) $c,
+      $w*3 (-$w*3) $c,
+      $w*4 (-$w*4) $c,
+      $w*5 (-$w*5) $c,
+      $w*6 (-$w*6) $c,
+      $w*7 (-$w*7) $c,
+      $w*8 (-$w*8) $c,
+      $w*9 (-$w*9) $c,
+      $w*10 (-$w*10) $c,
+      $w*11 (-$w*11) $c,
+      $w*12 (-$w*12) $c,
+      $w*13 (-$w*13) $c,
+      $w*14 (-$w*14) $c,
+      $w*15 (-$w*15) $c,
+      0 (-$w*1) $f,
+      0 (-$w*2) $f,
+      0 (-$w*3) $f,
+      0 (-$w*4) $f,
+      0 (-$w*5) $f,
+      0 (-$w*6) $f,
+      0 (-$w*7) $f,
+      0 (-$w*8) $f,
+      0 (-$w*9) $f,
+      0 (-$w*10) $f,
+      0 (-$w*11) $f,
+      0 (-$w*12) $f,
+      0 (-$w*13) $f,
+      0 (-$w*14) $f,
+      0 (-$w*15) $f,
+      0 $w*1 $g,
+      0 $w*2 $g,
+      0 $w*3 $g,
+      0 $w*4 $g,
+      0 $w*5 $g,
+      0 $w*6 $g,
+      0 $w*7 $g,
+      0 $w*8 $g,
+      0 $w*9 $g,
+      0 $w*10 $g,
+      0 $w*11 $g,
+      0 $w*12 $g,
+      0 $w*13 $g,
+      0 $w*14 $g,
+      0 $w*15 $g,
+      (-$w*1) 0 $h,
+      (-$w*2) 0 $h,
+      (-$w*3) 0 $h,
+      (-$w*4) 0 $h,
+      (-$w*5) 0 $h,
+      (-$w*6) 0 $h,
+      (-$w*7) 0 $h,
+      (-$w*8) 0 $h,
+      (-$w*9) 0 $h,
+      (-$w*10) 0 $h,
+      (-$w*11) 0 $h,
+      (-$w*12) 0 $h,
+      (-$w*13) 0 $h,
+      (-$w*14) 0 $h,
+      (-$w*15) 0 $h,
+      $w*1 0 $i,
+      $w*2 0 $i,
+      $w*3 0 $i,
+      $w*4 0 $i,
+      $w*5 0 $i,
+      $w*6 0 $i,
+      $w*7 0 $i,
+      $w*8 0 $i,
+      $w*9 0 $i,
+      $w*10 0 $i,
+      $w*11 0 $i,
+      $w*12 0 $i,
+      $w*13 0 $i,
+      $w*14 0 $i,
+      $w*15 0 $i;
+  }
+
+  body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background:
+      repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 2em,
+        papayawhip 0,
+        papayawhip 4em
+      ),
+      repeating-linear-gradient(
+        -45deg,
+        transparent,
+        transparent 2em,
+        seashell 0,
+        seashell 4em
+      ), snow;
+    background-blend-mode: multiply;
+    box-shadow: inset 0 0 0 1em snow;
+  }
+
+  h1 {
+    @include supershadow(1px);
+    font: 100 150px/1 Alegreya Sans;
+    letter-spacing: 20px;
+    text-align: center;
+    color: $text;
+  }
+
+</style>
+<body><h1>CHARLEY<br>XIAO</h1></body>
+</html>-->
+<!--<html>
+<head>CSS TEST</head>
+<style>
+  body {
+    display: grid;
+    place-items: center;
+    height: 100vh;
+    background: rebeccapurple;
+  }
+
+  svg {
+    width: 100%;
+    height: 100%;
+  }
+
+</style>
+<script>
+  const {
+    gsap: { set, to, timeline, from, fromTo }
+  } = window;
+
+  set(["#paper"], { scaleY: 0 });
+  set("#paper-top", { scaleY: 1 });
+
+  timeline({
+    ease: "none",
+    repeat: -1
+  }).to("#printer-frame", {
+    transformOrigin: "50% 100%",
+    scaleX: 0.99,
+    scaleY: 1.02,
+    duration: 0.5,
+    y: -2
+  });
+
+  timeline({
+    ease: "none",
+    repeat: -1
+  })
+    .to("#button-2", { css: { fill: "green" } })
+    .add("print", 1.2)
+    .to(
+      "#paper-top",
+      { duration: 6, scaleY: 0, transformOrigin: "50% 100%" },
+      "print"
+    )
+    .fromTo(
+      "#paper",
+      { transformOrigin: "0 0", scaleY: 0 },
+      { scaleY: 1, duration: 6, delay: 5 },
+      "print"
+    )
+    .add("complete", 9)
+    .to("#paper", { y: "+=70", skewX: 30, ease: Power4.easeOut }, "complete");
+
+</script>
+<body>
+
+  <svg width="550" height="415" viewBox="0 0 550 415" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <g id="printer-frame">
+      <rect width="550" height="415" />
+      <g id="printer">
+        <g id="side-panel">
+          <path id="Rectangle 24" d="M86 226.488C86 222.07 89.5817 218.488 94 218.488H154.727V237.093H86V226.488Z" fill="#50517B" />
+          <path id="Rectangle 23" d="M86 235.791C86 231.372 89.5817 227.791 94 227.791H154.727V402.209H94C89.5817 402.209 86 398.628 86 394.209V235.791Z" fill="#383856" />
+          <rect id="Rectangle 34" x="86" y="289.419" width="24.0545" height="33.7209" fill="#27283C" />
+        </g>
+        <g id="body">
+          <path id="Rectangle 1" d="M143.273 227.791H464V394.209C464 398.628 460.418 402.209 456 402.209H151.273C146.854 402.209 143.273 398.628 143.273 394.209V227.791Z" fill="#4F517B" />
+          <path id="Rectangle 2" d="M143.273 226.488C143.273 222.07 146.854 218.488 151.273 218.488H456C460.418 218.488 464 222.07 464 226.488V227.791H143.273V226.488Z" fill="#AFAADE" />
+          <path id="Rectangle 22" d="M110.055 402.209H442.236V407C442.236 411.418 438.655 415 434.236 415H118.055C113.636 415 110.055 411.418 110.055 407V402.209Z" fill="#27283C" />
+        </g>
+        <g id="left-control">
+          <rect id="Rectangle 7" x="159.309" y="315" width="20.6182" height="69.7674" rx="2" fill="#353553" />
+          <path id="Rectangle 10" d="M159.309 370.814H179.927V382.767C179.927 383.872 179.032 384.767 177.927 384.767H161.309C160.205 384.767 159.309 383.872 159.309 382.767V370.814Z" fill="#27283C" />
+        </g>
+        <g id="color-controls">
+          <g id="Group 1">
+            <rect id="Rectangle 7_2" x="370.073" y="315" width="20.6182" height="69.7674" rx="2" fill="#7FBBF3" />
+            <path id="Rectangle 10_2" d="M370.073 374.302H390.691V383.93C390.691 385.035 389.795 385.93 388.691 385.93H372.073C370.968 385.93 370.073 385.035 370.073 383.93V374.302Z" fill="#288EEB" />
+          </g>
+          <g id="Group 2">
+            <rect id="Rectangle 8" x="397.564" y="315" width="20.6182" height="69.7674" rx="2" fill="#F1A9DD" />
+            <path id="Rectangle 11" d="M397.564 374.302H418.182V383.93C418.182 385.035 417.286 385.93 416.182 385.93H399.564C398.459 385.93 397.564 385.035 397.564 383.93V374.302Z" fill="#E665C2" />
+          </g>
+          <g id="Group 3">
+            <rect id="Rectangle 9" x="425.055" y="315" width="20.6182" height="69.7674" rx="2" fill="#F1C398" />
+            <path id="Rectangle 12" d="M425.055 374.302H445.673V383.93C445.673 385.035 444.777 385.93 443.673 385.93H427.055C425.95 385.93 425.055 385.035 425.055 383.93V374.302Z" fill="#E89E59" />
+          </g>
+        </g>
+        <g id="buttons">
+          <rect id="Rectangle 4" x="370.073" y="289.419" width="20.6182" height="11.6279" rx="2" fill="#8485B4" />
+          <rect id="Rectangle 5" x="397.564" y="289.419" width="20.6182" height="11.6279" rx="2" fill="#8485B4" />
+          <rect id="Rectangle 6" x="425.055" y="289.419" width="20.6182" height="11.6279" rx="2" fill="#8485B4" />
+        </g>
+        <g id="tray">
+          <path id="Rectangle 13" d="M198.255 317C198.255 315.895 199.15 315 200.255 315H350.891C351.995 315 352.891 315.895 352.891 317V402.209H198.255V317Z" fill="#27283C" />
+          <g id="tray-bottom">
+            <path id="Rectangle 14" d="M198.255 367.326H213.436C214.541 367.326 215.436 368.221 215.436 369.326V402.209H198.255V367.326Z" fill="#8485B4" />
+            <path id="Rectangle 16" d="M335.709 369.326C335.709 368.221 336.605 367.326 337.709 367.326H352.891V402.209H335.709V369.326Z" fill="#8485B4" />
+            <rect id="Rectangle 15" x="214.291" y="385.93" width="121.418" height="16.2791" fill="#8485B4" />
+          </g>
+        </g>
+        <g id="paper">
+          <rect id="paper-bottom" x="226" y="315" width="98" height="84" fill="#E5E5E5" />
+          <rect id="square" x="234" y="323" width="23" height="6" fill="#68BAFA" />
+          <rect id="signature" width="21.6634" height="2.36312" transform="matrix(1 0 0.142187 0.98984 234 372)" fill="#27283C" />
+          <rect id="text-1" x="234" y="351" width="81.3273" height="5.98007" fill="#C4C4C4" />
+          <rect id="text-2" x="234" y="335" width="81.3273" height="5.98007" fill="#C4C4C4" />
+        </g>
+        <g id="panel">
+          <path id="Rectangle 18" d="M200.545 251.558C200.545 249.349 202.336 247.558 204.545 247.558H348.891C351.1 247.558 352.891 249.349 352.891 251.558V255.698H200.545V251.558Z" fill="#27283B" />
+          <rect id="Rectangle 17" x="200.545" y="255.698" width="152.345" height="43.0233" fill="#393A5A" />
+          <path id="Ellipse 1" d="M228.609 288.093C234.553 288.093 239.345 283.206 239.345 277.209C239.345 271.213 234.553 266.326 228.609 266.326C222.665 266.326 217.873 271.213 217.873 277.209C217.873 283.206 222.665 288.093 228.609 288.093Z" fill="#2C2D41" stroke="#68BAFA" stroke-width="2" />
+          <rect id="Rectangle 19" x="252.091" y="266.163" width="45.8182" height="23.2558" rx="1" fill="#D8D6EF" />
+          <rect id="button-1" x="309.364" y="271.977" width="11.4545" height="11.6279" rx="5.72727" fill="#8485B4" />
+          <rect id="button-2" x="327.691" y="271.977" width="11.4545" height="11.6279" rx="5.72727" fill="#8485B4" />
+          <rect id="square_2" x="390.691" y="255.698" width="34.3636" height="20.9302" rx="1" fill="#27283C" />
+          <rect id="button" x="159.309" y="289.419" width="20.6182" height="11.6279" rx="2" fill="#8485B4" />
+        </g>
+      </g>
+      <rect id="paper-top" x="226" y="165" width="98" height="53" fill="#E5E5E5" />
+
+    </g>
+  </svg>
+</body>
+</html>-->
+<html>
+<head>
+</head>
+<style>
+  #LoadingBar{
+    display: ;
+  }
+</style>
+<script>
+      function initPage()   
+{   
+    var objLoading = document.getElementById("LoadingBar");   
+    if (objLoading!=null)   
+    {   
+        document.getElementById("LoadingBar").style.display="none";
+}  
+}
+  </script>
+<body onload="initPage()">
+  <div id="LoadingBar">正在载入，请稍候……</div> 
+</body>
+</html>
+<!--<html>
+<head>
+<title>Loading.....</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<script language="JavaScript">
+var url = 'http://charley-xiao.github.io/moss.html';
+</script>
+</head>
+<body scroll="no" bgcolor="#FFFFFF" onLoad="location.href = url">
+<div align="center">
+<br><br><br><br><br><br><br>
+<p><font face="Verdana, Arial, Helvetica, sans-serif" size="2" color="#FF6600">正在载入XXXX....</font>
+</p>
+<p>
+<script>
+if (document.layers)
+     document.write('<Layer src="' + url + ' " VISIBILITY="hide"> </Layer>');
+     else if (document.all || document.getElementById)
+      document.write('<iframe src="' + url + '" style="visibility: hidden;"></iframe>');
+else location.href = url;
+</script>
+</p>
+</div>
+</body>
+</html>-->

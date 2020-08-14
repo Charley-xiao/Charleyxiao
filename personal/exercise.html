@@ -1,0 +1,74 @@
+<html>
+	<head>
+		<title>JS Test</title>
+	</head>
+	<style>
+		#container {
+		    width: 400px;
+		    height: 400px;
+		    position: relative;
+		    background: yellow;
+		}
+		#animate {
+			top: 350px;
+			left: 350px;
+		    width: 50px;
+		    height: 50px;
+		    position: absolute;
+		    background: red;
+		} 
+		#anotherblock{
+			top: 0px;
+			left: 350px;
+		    width: 50px;
+		    height: 50px;
+		    position: absolute;
+		    background: green;
+		}
+	</style>
+	<script>
+		function Move(){
+			var elem=document.getElementById("animate");
+			var ano=document.getElementById("anotherblock");
+			var pos=350;
+			var id=setInterval(frame,5);
+			var flag=1;
+			function frame(){
+				if(pos==0){
+					clearInterval(id);
+					id=setInterval(frame2,5);
+				}
+				else{
+					pos--;
+					elem.style.top=pos;
+					elem.style.left=pos;
+					ano.style.top=350-pos;
+					ano.style.left=pos;
+				}
+			}
+			function frame2(){
+				if(pos==350){
+					clearInterval(id);
+					id=setInterval(frame,5);
+				}
+				else{
+					pos++;
+					elem.style.top=pos;
+					elem.style.left=pos;
+					ano.style.top=350-pos;
+					ano.style.left=pos;
+				}
+			}
+		}
+	</script>
+	<body>
+
+		<h1>我的第一部 JavaScript 动画</h1>
+		<p><button onclick="Move()">点我</button></p>
+		<div id ="container">
+    		<div id ="animate"></div>
+    		<div id ="anotherblock"></div>
+		</div>
+
+	</body>
+</html>

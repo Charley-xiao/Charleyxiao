@@ -1,0 +1,344 @@
+<head>
+	<title>莫斯电码转换与破译</title>
+	<meta name="keywords" content="莫斯电码转换与破译"/>
+	<meta name="author" content="charleyxiao"/>
+	<meta http-equiv="charset" content="utf-8"/>
+	<script src="jquery-3.5.1.js"></script>
+	<script src="jquery-3.5.1.min.js"></script>
+  <style>
+	#tipDiv{
+		display: none;
+		position: absolute;
+		left: 39%;
+		top: 230px;
+		z-index: 9999;
+		background: #d9d9d9;
+		padding: 10px;
+		border-radius: 700px;
+		background: "https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=3117268607,1691042711&fm=26&gp=0.jpg";
+	}
+	#tipInfo{
+		margin-top: 10px;
+	}
+  </style>
+</head>
+<style>
+	.button{
+		background-color: white; /* Green */
+	    border: 2px solid #4CAF50;
+	    color: black;
+	    padding: 16px 32px;
+	    text-align: center;
+	    text-decoration: none;
+	    display: inline-block;
+	    font-size: 16px;
+	    margin: 4px 2px;
+	    -webkit-transition-duration: 0.4s; /* Safari */
+	    transition-duration: 0.4s;
+	    cursor: pointer;
+	}
+	.button1{
+		border: 2px solid #008CBA;
+	}
+	.button1:hover {
+    	background-color: #008CBA;
+    	color: white;
+    	box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+	}
+	.button2{
+		width: 660px;
+		font-size: 20px;
+	}
+	.button2:hover{
+		background-color: #4CAF50;
+    	color: white;
+    	box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+	}
+	.button2 span {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  transition: 0.5s;
+}
+
+.button2 span:after {
+  content: '»';
+  position: absolute;
+  opacity: 0;
+  top: 0;
+  right: -20px;
+  transition: 0.5s;
+}
+
+.button2:hover span {
+  padding-right: 25px;
+}
+
+.button2:hover span:after {
+  opacity: 1;
+  right: 0;
+}
+	body{
+		background-repeat: no-repeat;
+		background-attachment: fixed;
+	}
+	.shuru{
+		border-radius: 18px;
+		background: #52fa4e;
+box-shadow: inset 50px 50px 100px #46d542, 
+            inset -50px -50px 100px #5eff5a;
+            font-size: 30px;
+            border: 2px solid gold;
+	}
+</style>
+<script>
+	var aft="";
+	var tmpyuan="";
+	var tmpaft="";
+	function zhuanhuan(){
+		//var origin=prompt("请输入需要转化的原文");
+		let origin=$("textarea#inp").val();
+		//var origin=document.getElementById("inp").innerHTML;
+		for(i=0;i<origin.length;i++){
+			if(origin[i]=='A'||origin[i]=='a')aft=aft+".-";
+			else if(origin[i]=='B'||origin[i]=='b')aft=aft+"-...";
+			else if(origin[i]=='C'||origin[i]=='c')aft=aft+"-.-.";
+			else if(origin[i]=='D'||origin[i]=='d')aft=aft+"-..";
+			else if(origin[i]=='E'||origin[i]=='e')aft=aft+".";
+			else if(origin[i]=='F'||origin[i]=='f')aft=aft+"..-.";
+			else if(origin[i]=='G'||origin[i]=='g')aft=aft+"--.";
+			else if(origin[i]=='H'||origin[i]=='h')aft=aft+"....";
+			else if(origin[i]=='I'||origin[i]=='i')aft=aft+"..";
+			else if(origin[i]=='J'||origin[i]=='j')aft=aft+".---";
+			else if(origin[i]=='K'||origin[i]=='k')aft=aft+"-.-";
+			else if(origin[i]=='L'||origin[i]=='l')aft=aft+".-..";
+			else if(origin[i]=='M'||origin[i]=='m')aft=aft+"--";
+			else if(origin[i]=='N'||origin[i]=='n')aft=aft+"-.";
+			else if(origin[i]=='O'||origin[i]=='o')aft=aft+"---";
+			else if(origin[i]=='P'||origin[i]=='p')aft=aft+".--.";
+			else if(origin[i]=='Q'||origin[i]=='q')aft=aft+"--.-";
+			else if(origin[i]=='R'||origin[i]=='r')aft=aft+".-.";
+			else if(origin[i]=='S'||origin[i]=='s')aft=aft+"...";
+			else if(origin[i]=='T'||origin[i]=='t')aft=aft+"-";
+			else if(origin[i]=='U'||origin[i]=='u')aft=aft+"..-";
+			else if(origin[i]=='V'||origin[i]=='v')aft=aft+"...-";
+			else if(origin[i]=='W'||origin[i]=='w')aft=aft+".--";
+			else if(origin[i]=='X'||origin[i]=='x')aft=aft+"-..-";
+			else if(origin[i]=='Y'||origin[i]=='y')aft=aft+"-.--";
+			else if(origin[i]=='Z'||origin[i]=='z')aft=aft+"--..";
+			else if(origin[i]=='1')aft=aft+".----";
+			else if(origin[i]=='2')aft=aft+"..---";
+			else if(origin[i]=='3')aft=aft+"...--";
+			else if(origin[i]=='4')aft=aft+"....-";
+			else if(origin[i]=='5')aft=aft+".....";
+			else if(origin[i]=='6')aft=aft+"-....";
+			else if(origin[i]=='7')aft=aft+"--...";
+			else if(origin[i]=='8')aft=aft+"---..";
+			else if(origin[i]=='9')aft=aft+"----.";
+			else if(origin[i]=='0')aft=aft+"-----";
+
+			else if(origin[i]=='.')aft=aft+".-.-.-";
+			else if(origin[i]==',')aft=aft+"--..--";
+			else if(origin[i]=='?')aft=aft+"..--..";
+			else if(origin[i]=='!')aft=aft+"-.-.--";
+			else if(origin[i]==':')aft=aft+"---...";
+			else if(origin[i]=='\'')aft=aft+".----.";
+			else if(origin[i]=='=')aft=aft+"-...-";
+			else if(origin[i]==';')aft=aft+"-.-.-.";
+			else if(origin[i]=='/')aft=aft+"-..-.";
+			else if(origin[i]=='_')aft=aft+"..--.-";
+			else if(origin[i]=='\"')aft=aft+".-..-.";
+			aft=aft+"/";
+		}
+		//window.alert("结果："+aft);
+		document.getElementById("biao1").val=aft;
+		$("textarea#biao1").val(aft);
+		tmpaft=aft;
+		aft="";
+		return 1;
+	}
+	var yuan="";
+	function poyi(){
+		//var yiwen=prompt("请输入需要破译的密文，用任意非空字符隔开均可");
+		let yiwen=$("textarea#inp").val();
+		//var yiwen=document.getElementById("inp").innerHTML;
+		var tmp=[];
+		var qwq="";
+		for(i=0;i<yiwen.length;i++){
+			if(yiwen[i]=='-'||yiwen[i]=='.')qwq=qwq+yiwen[i];
+			else{
+				tmp.push(qwq);
+				qwq="";
+			}
+		}
+		tmp.push(qwq);
+		for(i=0;i<tmp.length;i++){
+			var zhe=tmp[i];
+			var lgth=zhe.length;//window.alert(zhe);
+			if(lgth==1){
+				if(zhe[0]=='.')yuan=yuan+"e";
+				else if(zhe[0]=='-')yuan=yuan+"t";
+			}
+			else if(lgth==2){
+				if(zhe[0]=='.'){
+					if(zhe[1]=='.')yuan=yuan+"i";
+					else if(zhe[1]=='-')yuan=yuan+"a";
+				}
+				else if(zhe[0]=='-'){
+					if(zhe[1]=='-')yuan=yuan+"m";
+					else if(zhe[1]=='.')yuan=yuan+"n";
+				}
+			}
+			else if(lgth==3){
+				if(zhe[0]=='-'&&zhe[1]=='-'&&zhe[2]=='-')yuan=yuan+"o";
+
+				else if(zhe[0]=='.'&&zhe[1]=='-'&&zhe[2]=='-')yuan=yuan+"w";
+				else if(zhe[0]=='-'&&zhe[1]=='.'&&zhe[2]=='-')yuan=yuan+"k";
+				else if(zhe[0]=='-'&&zhe[1]=='-'&&zhe[2]=='.')yuan=yuan+"g";
+
+				else if(zhe[0]=='.'&&zhe[1]=='.'&&zhe[2]=='-')yuan=yuan+"u";
+				else if(zhe[0]=='.'&&zhe[1]=='-'&&zhe[2]=='.')yuan=yuan+"r";
+				else if(zhe[0]=='-'&&zhe[1]=='.'&&zhe[2]=='.')yuan=yuan+"d";
+
+				else if(zhe[0]=='.'&&zhe[1]=='.'&&zhe[2]=='.')yuan=yuan+"s";
+			}
+			else if(lgth==4){
+				if(zhe[0]=='-'&&zhe[1]=='-'&&zhe[2]=='-'&&zhe[3]=='-');//ch
+
+				else if(zhe[0]=='.'&&zhe[1]=='-'&&zhe[2]=='-'&&zhe[3]=='-')yuan=yuan+"j";
+				else if(zhe[0]=='-'&&zhe[1]=='.'&&zhe[2]=='-'&&zhe[3]=='-')yuan=yuan+"y";
+				else if(zhe[0]=='-'&&zhe[1]=='-'&&zhe[2]=='.'&&zhe[3]=='-')yuan=yuan+"q";
+				else if(zhe[0]=='-'&&zhe[1]=='-'&&zhe[2]=='-'&&zhe[3]=='.');//:o
+
+				else if(zhe[0]=='.'&&zhe[1]=='.'&&zhe[2]=='-'&&zhe[3]=='-');//:u
+				else if(zhe[0]=='.'&&zhe[1]=='-'&&zhe[2]=='.'&&zhe[3]=='-');//:a
+				else if(zhe[0]=='.'&&zhe[1]=='-'&&zhe[2]=='-'&&zhe[3]=='.')yuan=yuan+"p";
+				else if(zhe[0]=='-'&&zhe[1]=='.'&&zhe[2]=='.'&&zhe[3]=='-')yuan=yuan+"x";
+				else if(zhe[0]=='-'&&zhe[1]=='.'&&zhe[2]=='-'&&zhe[3]=='.')yuan=yuan+"c";
+				else if(zhe[0]=='-'&&zhe[1]=='-'&&zhe[2]=='.'&&zhe[3]=='.')yuan=yuan+"z";
+
+				else if(zhe[0]=='.'&&zhe[1]=='.'&&zhe[2]=='.'&&zhe[3]=='-')yuan=yuan+"v";
+				else if(zhe[0]=='.'&&zhe[1]=='.'&&zhe[2]=='-'&&zhe[3]=='.')yuan=yuan+"f";
+				else if(zhe[0]=='.'&&zhe[1]=='-'&&zhe[2]=='.'&&zhe[3]=='.')yuan=yuan+"l";
+				else if(zhe[0]=='-'&&zhe[1]=='.'&&zhe[2]=='.'&&zhe[3]=='.')yuan=yuan+"b";
+
+				else if(zhe[0]=='.'&&zhe[1]=='.'&&zhe[2]=='.'&&zhe[3]=='.')yuan=yuan+"h";
+			}
+			
+			if(zhe==".----")yuan=yuan+"1";
+			else if(zhe=="..---")yuan=yuan+"2";
+			else if(zhe=="...--")yuan=yuan+"3";
+			else if(zhe=="....-")yuan=yuan+"4";
+			else if(zhe==".....")yuan=yuan+"5";
+			else if(zhe=="-....")yuan=yuan+"6";
+			else if(zhe=="--...")yuan=yuan+"7";
+			else if(zhe=="---..")yuan=yuan+"8";
+			else if(zhe=="----.")yuan=yuan+"9";
+			else if(zhe=="-----")yuan=yuan+"0";
+			
+			else if(zhe==".-.-.-")yuan=yuan+".";
+			else if(zhe=="--..--")yuan=yuan+",";
+			else if(zhe=="..--..")yuan=yuan+"?";
+			else if(zhe=="-.-.--")yuan=yuan+"!";
+			else if(zhe=="---...")yuan=yuan+":";
+			else if(zhe==".----.")yuan=yuan+"\'";
+			else if(zhe=="-...-")yuan=yuan+"=";
+			else if(zhe=="-.-.-.")yuan=yuan+";";
+			else if(zhe=="-..-.")yuan=yuan+"/";
+			else if(zhe=="..--.-")yuan=yuan+"_";
+			else if(zhe==".-..-.")yuan=yuan+"\"";
+		}
+		//window.alert("结果："+yuan);
+		document.getElementById("biao1").innerHTML=yuan;
+		$("textarea#biao1").val(yuan);
+		tmpyuan=yuan;
+		yuan="";
+		return 1;
+	}
+	function mOver(obj,flag) {
+		obj.style.backgroundColor = "#1ec5e5";
+  		if(flag==1)obj.innerHTML = "点击此处进行转换";
+  		else obj.innerHTML = "点击此处进行破译";
+	}
+	function mOut(obj,flag) {
+		obj.style.backgroundColor = "#FF0000";
+  		if(flag==1)obj.innerHTML = "转换";
+  		else obj.innerHTML = "破译";
+	}
+</script>
+<script>
+	function copyToClipboard(element) { 
+	    var $temp = $("<input>"); 
+	    $("body").append($temp); 
+	    $temp.val($(element).text()).select(); 
+	    document.execCommand("copy"); 
+	    $temp.remove(); 
+	} 
+</script>
+<script type="text/javascript"> 
+    function copyUrl2() 
+    { 
+    var Url2=document.getElementById("biao1"); 
+    Url2.select(); // 选择对象 
+    document.execCommand("Copy"); // 执行浏览器复制命令 
+    alert("已复制好，可贴粘。"); 
+    } 
+</script>
+<script type="text/javascript"> 
+    function copyUrl3() 
+    { 
+    var Url2=document.getElementById("inp"); 
+    Url2.select(); // 选择对象 
+    document.execCommand("Copy"); // 执行浏览器复制命令 
+    alert("已复制好，可贴粘。"); 
+    } 
+</script> 
+<script>
+      function initPage()   
+{   
+    var objLoading = document.getElementById("LoadingBar");   
+    if (objLoading!=null)   
+    {   
+        document.getElementById("LoadingBar").style.display="none";
+}  
+}
+  </script>
+ <script type="text/javascript">
+	function showTip(info){
+		$('#tipInfo').html(info);
+		$('#LoadingBar').show();
+	}
+	showTip('Loading...');
+	function closeTip(){
+		$('#LoadingBar').hide();
+	}
+  </script>
+<body background="bg2.jpg" onload="initPage()">
+	<!--<audio src="mymusic.m4a" id="aud" autoplay="autoplay" controls="controls" preload="auto"></audio>-->
+	<!--<audio autoplay="autoplay" loop=3>
+	<source src="bird.m4a" type="audio/mpeg">
+	</audio>-->
+	<div id="LoadingBar">
+    <center><img style="width:25px;" src="http://img.lanrentuku.com/img/allimg/1212/5-121204193R5-50.gif"></center>
+    <div id="tipInfo"></div>
+  	</div>
+	<center><font size=10>莫斯电码转换与破译</font></center><hr/>
+	<br/><center><font size=9 color=gold class="shuru">&nbsp;输入：</font></center>
+	<center><textarea cols="20" rows="10" id="inp" style="border:0;border-radius:5px;background-color:rgba(241,241,241,.98);width: 355px;height: 100px;padding: 10px;resize: none;" placeholder="在此输入"></textarea></center>
+    <center><input   class="button button1" id="button" type="button" onClick="copyUrl3()" value="点击复制"/></center>
+	<center><div id="button" class="button button2" onclick="zhuanhuan()" type="button" >转换</div></center><br/>
+	<center><div id="button" onclick="poyi()" class="button button2" type="button">破译</div></center>
+	<br/><center><font size=9 color=gold class="shuru">&nbsp;结果：</font></center>
+	<!--<center><font size=9 color=gold><p id="demo"></p></font></center>-->
+	<!--<center><div id="copy-text" style="font-size: 60;color: gold;"><font size=9 color=gold></font></div></center>-->
+	<!--<center><button onclick="copyToClipboard('#copy-text')" type="button" >Copy</button></center>-->
+	<center><textarea cols="20" rows="10" id="biao1" style="border:0;border-radius:5px;background-color:rgba(241,241,241,.98);width: 355px;height: 100px;padding: 10px;resize: none;" placeholder="结果"></textarea></center>
+    <center><input type="button" class="button button1" id="button" onClick="copyUrl2()" value="点击复制"/></center>
+	<!--<button onclick="mycopy()">复制</button>-->
+	<!--<button id="nmsl" class="btn btn-primary">复制</button>-->
+	<!--<input type="button" onClick="copyUrl2()" value="点击复制" />-->
+	<br/><center><a href="https://www.flagcounter.me/details/bFO"><img src="https://www.flagcounter.me/bFO/" alt="Flag Counter"></a></center>
+	<!--<textarea cols="20" rows="10" id="biao1">用户定义的代码区域</textarea>-->
+	<hr/>
+	<font color=gold>Made By&nbsp;</font><button><a href="https://charley-xiao.github.io"><font color=blue>Charleyxiao</font></a></button><font color=gold>.</font>
+</body>
