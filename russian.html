@@ -543,8 +543,14 @@
             document.getElementById("another").style.display="none";
             document.getElementById("review_final").style.display="";
         }
-        function review_check(fst,scd,obj){
-            if(chineselist[lstofwas[fst]]==chineselist[scd]){
+        function bianli(fst){
+            for(var i=1;i<=4;i++){
+                if(chineselist[lstofwas[fst]]==document.getElementById("hahaha"+i).innerHTML) return 0;
+            }
+            return 1;
+        }
+        function review_check(fst,scd,obj,flg){
+            if(chineselist[lstofwas[fst]]==chineselist[scd]||(flg==1&&bianli(fst)==1)){
                 obj.style.color="green";
                 obj.disabled="disabled";
                 huhu+=1;
@@ -563,18 +569,19 @@
                 var randseed=getrand(sze);
                 randseed-=1;
                 document.getElementById("contained").innerHTML+="<br/><br/><br/><div class=\"contained_statement\"><center><p style=\"color: #4361ee;font-size: 30px;\">"+russianlist[lstofwas[i]]+"</p></center></div><br/>";
-                document.getElementById("contained").innerHTML+="<br/><center><button id=\"hahaha1\" onclick=\"review_check("+i+","+randseed+",this)\">"+chineselist[randseed]+"</button></center>";
+                document.getElementById("contained").innerHTML+="<br/><center><button id=\"hahaha1\" onclick=\"review_check("+i+","+randseed+",this,0)\">"+chineselist[randseed]+"</button></center>";
                 randseed=getrand(sze);
                 randseed-=1;
-                document.getElementById("contained").innerHTML+="<br/><center><button id=\"hahaha2\" onclick=\"review_check("+i+","+randseed+",this)\">"+chineselist[randseed]+"</button></center>";
+                document.getElementById("contained").innerHTML+="<br/><center><button id=\"hahaha2\" onclick=\"review_check("+i+","+randseed+",this,0)\">"+chineselist[randseed]+"</button></center>";
                 randseed=getrand(sze);
                 randseed-=1;
-                document.getElementById("contained").innerHTML+="<br/><center><button id=\"hahaha3\" onclick=\"review_check("+i+","+randseed+",this)\">"+chineselist[randseed]+"</button></center>";
+                document.getElementById("contained").innerHTML+="<br/><center><button id=\"hahaha3\" onclick=\"review_check("+i+","+randseed+",this,0)\">"+chineselist[randseed]+"</button></center>";
                 randseed=getrand(sze);
                 randseed-=1;
-                document.getElementById("contained").innerHTML+="<br/><center><button id=\"hahaha4\" onclick=\"review_check("+i+","+randseed+",this)\">"+chineselist[randseed]+"</button></center><br/>";
+                document.getElementById("contained").innerHTML+="<br/><center><button id=\"hahaha4\" onclick=\"review_check("+i+","+randseed+",this,0)\">"+chineselist[randseed]+"</button></center><br/>";
                 var rndstate=getrand(4);
                 document.getElementById("hahaha"+rndstate).innerHTML=chineselist[lstofwas[i]];
+                document.getElementById("contained").innerHTML+="<br/><center><button id=\"hahaha5\" onclick=\"review_check("+i+","+randseed+",this,1)\">"+以上都不是+"</button></center><br/>";
             }
         }
         function initprocess(){
