@@ -620,6 +620,9 @@
         function gotomainsite(){
             top.location="https://charley-xiao.github.io";
         }
+        function settingsshow(){
+
+        }
     </script>
 </head>
 <body>
@@ -646,7 +649,8 @@
                 <button>点击进入</button><br/><br/>
                 <button onclick="loadprocess()">载入学习进度</button><br/><br/>
                 <button onclick="initprocess()">重置学习进度</button><br/><br/>
-                <button onclick="gotomainsite()">前往主站</button>
+                <button onclick="gotomainsite()">前往主站</button><br/><br/>
+                <button onclick="settingsshow()">设置</button>
             </div>
         </div>
     </div>
@@ -712,14 +716,18 @@
         </div>
     </div>
     <div id="review_final" style="display: none;">
-        1234
+        <center><p style="color: #4361ee;font-size: 30px;">恭喜！您复习了所有错误单词！</p></center><br/>
+        <center><p style="color: #4361ee;font-size: 30px;">提示：可以重置学习进度</p></center><br/>
+    </div>
+    <div id="settings" style="display: none;">
+        
     </div>
     <div id="retry">
         <br/>
         <center><img src="restart.jpg" onclick="refresh_page()" style="width: 30px;height: 30px;" /></center><br/>
     </div>
     <div>
-        版本号：202009222330
+        版本号：202009222335
     </div>
 </body>
 </html>
