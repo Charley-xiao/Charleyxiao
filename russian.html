@@ -588,7 +588,7 @@
         }
         var where_in_lstofwas=0;
         function start_output_statement(){
-            if(lstofwas.length<where_in_lstofwas) show_review_final();
+            if(lstofwas.length<where_in_lstofwas-1) show_review_final();
             document.getElementById("contained_question").innerHTML=russianlist[lstofwas[where_in_lstofwas]];
             document.getElementById("contained_ans1").innerHTML=chineselist[getrand(sze)-1];
             document.getElementById("contained_ans2").innerHTML=chineselist[getrand(sze)-1];
