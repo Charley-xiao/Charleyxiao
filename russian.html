@@ -590,7 +590,7 @@
         function start_output_statement(){
             if(lstofwas.length<where_in_lstofwas) show_review_final();
             document.getElementById("contained_question").innerHTML=russianlist[lstofwas[where_in_lstofwas]];
-            if(russianlist[lstofwas[where_in_lstofwas]]=="undefined") show_review_final();
+            if(russianlist[lstofwas[where_in_lstofwas]]==undefined) show_review_final();
             document.getElementById("contained_ans1").innerHTML=chineselist[getrand(sze)-1];
             document.getElementById("contained_ans2").innerHTML=chineselist[getrand(sze)-1];
             document.getElementById("contained_ans3").innerHTML=chineselist[getrand(sze)-1];
@@ -719,7 +719,7 @@
         <center><img src="restart.jpg" onclick="refresh_page()" style="width: 30px;height: 30px;" /></center><br/>
     </div>
     <div>
-        版本号：202009222325
+        版本号：202009222330
     </div>
 </body>
 </html>
