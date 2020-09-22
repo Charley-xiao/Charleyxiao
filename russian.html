@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -309,6 +308,32 @@
              border-left-color: #4361ee;
              transition: border-color 0s ease-out 0.6s, width 0.3s ease-out 0.6s, height 0.3s ease-out 1s;
         }
+        h1{
+          color: /*#484848*/#9370DB;
+          font-size: 50px;
+          font-weight: bold;
+          font-family: monospace;
+          letter-spacing: 7px;
+          cursor: pointer
+        }
+        h1 span{
+          transition: .5s linear
+        }
+        h1:hover span:nth-child(1){
+          margin-right: 5px
+        }
+        h1:hover span:nth-child(1):after{
+          content: " ";
+        }
+        h1:hover span:nth-child(2){
+          margin-left: 30px
+        }
+        h1:hover span{
+          color: #4169E1;
+          text-shadow: 0 0 10px #4169E1,
+                       0 0 20px #4169E1, 
+                       0 0 40px #4169E1;
+        }
     </style>
     <script>
         var signal=-1;
@@ -561,32 +586,38 @@
                 window.alert("Oops!Try Again!");
             }
         }
+        var where_in_lstofwas=0;
+        function start_output_statement(){
+            if(lstofwas.length<where_in_lstofwas) show_review_final();
+            document.getElementById("contained_question").innerHTML=russianlist[lstofwas[where_in_lstofwas]];
+            document.getElementById("contained_ans1").innerHTML=chineselist[getrand(sze)-1];
+            document.getElementById("contained_ans2").innerHTML=chineselist[getrand(sze)-1];
+            document.getElementById("contained_ans3").innerHTML=chineselist[getrand(sze)-1];
+            document.getElementById("contained_ans4").innerHTML=chineselist[getrand(sze)-1];
+            document.getElementById("contained_ans"+getrand(4)).innerHTML=chineselist[lstofwas[where_in_lstofwas]];
+        }
+        function containedcheckanswer(pointer){
+            if(document.getElementById("contained_ans"+pointer).innerHTML==chineselist[lstofwas[where_in_lstofwas]]){
+                window.alert("Good Job!");
+                where_in_lstofwas+=1;
+                start_output_statement();
+            }
+            else{
+                window.alert("Try Again!");
+                start_output_statement();
+            }
+        }
         function makeanother(){
             document.getElementById("button_in_another").style.display="none";
             document.getElementById("contained").style.display="";
-            var i=0;
-            for(i=0;i<lstofwas.length;i++){
-                var randseed=getrand(sze);
-                randseed-=1;
-                document.getElementById("contained").innerHTML+="<br/><br/><br/><div class=\"contained_statement\"><center><p style=\"color: #4361ee;font-size: 30px;\">"+russianlist[lstofwas[i]]+"</p></center></div><br/>";
-                document.getElementById("contained").innerHTML+="<br/><center><button id=\"hahaha1\" onclick=\"review_check("+i+","+randseed+",this,0)\">"+chineselist[randseed]+"</button></center>";
-                randseed=getrand(sze);
-                randseed-=1;
-                document.getElementById("contained").innerHTML+="<br/><center><button id=\"hahaha2\" onclick=\"review_check("+i+","+randseed+",this,0)\">"+chineselist[randseed]+"</button></center>";
-                randseed=getrand(sze);
-                randseed-=1;
-                document.getElementById("contained").innerHTML+="<br/><center><button id=\"hahaha3\" onclick=\"review_check("+i+","+randseed+",this,0)\">"+chineselist[randseed]+"</button></center>";
-                randseed=getrand(sze);
-                randseed-=1;
-                document.getElementById("contained").innerHTML+="<br/><center><button id=\"hahaha4\" onclick=\"review_check("+i+","+randseed+",this,0)\">"+chineselist[randseed]+"</button></center><br/>";
-                var rndstate=getrand(4);
-                document.getElementById("hahaha"+rndstate).innerHTML=chineselist[lstofwas[i]];
-                document.getElementById("contained").innerHTML+="<br/><center><button id=\"hahaha5\" onclick=\"review_check("+i+","+randseed+",this,1)\">"+"以上都不是"+"</button></center><br/>";
-            }
+            start_output_statement();
         }
         function initprocess(){
             setCookie("username","",1000);
             checkCookie();
+        }
+        function gotomainsite(){
+            top.location="https://charley-xiao.github.io";
         }
     </script>
 </head>
@@ -614,9 +645,11 @@
                 <button>点击进入</button><br/><br/>
                 <button onclick="loadprocess()">载入学习进度</button><br/><br/>
                 <button onclick="initprocess()">重置学习进度</button><br/><br/>
-                <button href="https://charley-xiao.github.io">前往主站</button>
+                <button onclick="gotomainsite()">前往主站</button>
             </div>
         </div>
+    </div>
+    <h1><center><span>РУССКИЙ</span>&nbsp;<span>ЯЗЫК</span></center></h1>
     <div id="page-aft" style="display: none;">
         <br/><br/><br/><br/><br/>
         <center><button onclick="ShowMemorize()">背单词</button></center><br/>
@@ -638,8 +671,7 @@
     </div>
     <div id="Review" style="display: none;">
         <br/><br/><br/><br/><br/><br/>
-        <!--<center><button onclick="start2()">点击此处开始背错过的单词</button></center><br/>-->
-        功能暂时维护中！
+        <center><button onclick="start2()">点击此处开始背错过的单词</button></center><br/>
     </div>
     <div id="mainmem" style="display: none;">
         <br/><br/><br/><br/>
@@ -668,17 +700,25 @@
     </div>
     <div id="another" style="display: none;">
         <center><button id="button_in_another" onclick="makeanother()">点击开始背错过的单词</button></center>
-        <div id="contained"></div>
+        <div id="contained" style="display: none;">
+            <br/><br/><br/><br/>
+            <center><p id="contained_question" style="color: #4361ee;font-size: 30px;"></p></center>
+            <br/>
+            <center><button id="contained_ans1" onclick="containedcheckanswer(1)"></button></center><br/>
+            <center><button id="contained_ans2" onclick="containedcheckanswer(2)"></button></center><br/>
+            <center><button id="contained_ans3" onclick="containedcheckanswer(3)"></button></center><br/>
+            <center><button id="contained_ans4" onclick="containedcheckanswer(4)"></button></center><br/>
+        </div>
     </div>
     <div id="review_final" style="display: none;">
         1234
     </div>
     <div id="retry">
         <br/>
-        <center><img src="restart.jpg" onclick="refresh_page()" style="width: 30px;height: 30px;" /></center>
+        <center><img src="restart.jpg" onclick="refresh_page()" style="width: 30px;height: 30px;" /></center><br/>
     </div>
     <div>
-        版本号：202009182325
+        版本号：202009221541
     </div>
 </body>
 </html>
