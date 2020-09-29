@@ -48,12 +48,18 @@
 		}
 		#nxt{
 			position: absolute;
-			top: 500px;
-			left: 700px;
+			top: 80%;
+			left: 50%;
+			transform: translate(-50%,-50%);
+		}
+		#body{
+			-webkit-transition-duration: 0.7s;
+		    transition-duration: 0.7s;
 		}
 	</style>
 	<script>
-		var sze=24;
+		var sze=47;
+		var state_of_theme=0;
 		function change(){
         	document.getElementById("imageplace").innerHTML="<image src=\"zbkjpgs/"+getrand(sze)+".JPG\" alt=\"貌似出现了问题\">"
         }
@@ -68,14 +74,24 @@
         function refresh_page(){
             location.reload();
         }
+        function dati(){
+        	document.getElementById("initial").style.display="none";
+			document.getElementById("quiz").style.display="";
+        }
+        function changetheme(){
+            state_of_theme=state_of_theme^1;
+            if(state_of_theme==0){document.getElementById("body").style.background="white";document.getElementById("hs").style.color="black";}
+            else{document.getElementById("body").style.background="#000";document.getElementById("hs").style.color="gold";}
+        }
 	</script>
 </head>
-<body>
+<body id="body">
 	<div id="initial">
 		<br/><br/><br/><br/>
-		<h1><center><span>玻璃语录</span><span>文库</span></center></h1>
+		<h1 id="hs"><center><span>玻璃语录</span><span>文库</span></center></h1>
 		<br/><br/><br/><br/>
-		<center><input class="button button1" onclick="start()" type="button" value="进入文库"></center>
+		<center><input class="button button1" onclick="start()" type="button" value="进入文库"></center><br/>
+		<center><input class="button button1" onclick="dati()" type="button" value="玻璃思想测验"></center>
 		<br/><br/><br/><br/>
 		<center><p style="color: #4361ee;font-size: 15px;">Made By <a href="https://charley-xiao.github.io">Charleyxiao</a>.</p></center>
 		<br/><br/>
@@ -86,6 +102,13 @@
 		<center><p id="imageplace"></p></center>
 		<br/><br/><br/><br/>
 		<center><input class="button button1"  id="nxt" onclick="change()" type="button" value="继续查看"></center>
+	</div>
+	<div id="quiz" style="display: none;">
+		暂不支持此功能
+	</div>
+	<div>
+		<p style="position: absolute;top: 7%;left: 2%;color: gold;cursor: help;">版本号：202009292222</p>
+        <p style="position: absolute;top: 12%;left: 2%;color: gold;cursor: pointer;" onclick="changetheme();"><u>更换主题</u></p>
 	</div>
 </body>
 </html>
